@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="en">    
+    <head>
+        <title>ARIA-*</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta http-equiv="Subject" content="웹 접근성을 위한 사이트" /> 
+        <meta http-equiv="Author" content="PJH" /> 
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <style type="text/css">    
+            *{margin: 0; padding:0;}
+            ul, ol{list-style: none;}
+            
+            #wrap{padding:18px 0; width:95%; max-width: 1024px; margin:0 auto; font-size:16px; font-family:"돋움", "dotum", "굴림", "gulim", sans-serif; line-height: 2;}
+            /* h1-22 h2-21 */
+            h2{margin-bottom:8px; font-size:21px;}
+            h3{font-size:14px;}
+         /* Style the buttons that are used to open and close the accordion panel */
+        .accordion {
+          background-color: #eee;
+          color: #444;
+          cursor: pointer;
+          padding: 18px;
+          width: 100%;
+          text-align: left;
+          border: none;
+          outline: none;
+          transition: 0.4s;
+        }
+            
+            
+            nav > ul {display:table; table-layout: fixed; width:100%;}
+            nav > ul > li{display:table-cell; vertical-align: middle; padding:8px; text-align: center;}
+
+        /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+        .active, .accordion:hover {
+          background-color: #ccc;
+        }
+        .accordion_list{margin-bottom:8px;}
+
+        /* Style the accordion panel. Note: hidden by default */
+        .panel {
+          background-color: white;
+          max-height: 0;
+          overflow: hidden;
+          transition: max-height 0.2s ease-out;
+        } 
+        .panel .inner{
+            padding: 18px;
+        }        
+            xmp{
+                white-space: pre-wrap;
+                font-size: 14px;
+                line-height: 1.4;     
+                
+            }
+            .xmp_wrap{  
+                border: 1px solid #000;
+                margin-top: 18px;    
+                padding: 0 18px 18px;
+            }
+            .panel .code{border:1px solid #e6e6e6; padding:8px; margin:8px 0;}
+            .card{margin:18px 0 30px;}            
+            /* table set */
+            .tg  {border-collapse:collapse;border-spacing:0; width:100%;}
+            .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+            .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+            .tg td, .tg th{text-align: center;}
+            .tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:middle}
+            .tg .tg-w3ps{font-weight:bold;background-color:#ffce93;border-color:inherit;text-align:center;vertical-align:top}
+            .tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
+            .tg .tg-baqh{text-align:center;vertical-align:top}
+            
+            /* aria-errormessage */
+            div.text,
+            div.textinvalid,
+            div.button
+            {
+              margin: 0;
+              padding: 0;
+              padding-left: 20px;
+              padding-bottom: .5em;
+              display: block;
+            }
+            
+            div.button{text-align: center;}
+            div.button [type="button"]{padding:10px; min-width: 105px;}
+
+            div.text label,
+            div.textinvalid label {
+            margin: 0;
+            padding: 0;
+            display: block;
+            padding-top: .25em;
+            }
+
+            div.text input,
+            div.textinvalid input {
+            margin: 0;
+            padding: 0;
+            display: inline;
+            }
+
+            span.inst {
+              font-size: 75%;
+              color: blue;
+              padding-left: .25em;
+            }
+
+            div.text input:active,
+            div.text input:focus,
+            div.text input:hover
+            {
+              border-color: gray;
+              background-color: #E0E0E0;
+            }
+
+            div.textinvalid input:active,
+            div.textinvalid input:focus,
+            div.textinvalid input:hover
+            {
+              border-color: gray;
+              background-color: #FF8080;
+            }
+
+
+            form div.error {
+              display: none;
+              border: thin solid red;
+              padding: .25em;
+              color: red;
+              font-size: 80%;
+            }
+
+            .offscreen {
+                position: absolute;
+                top: -30em;
+                left: -300em;
+            }
+            
+            /* aria-busy */
+           
+            #main {
+              position: relative;
+              display: block;
+              box-sizing: border-box;
+              width: 90%;
+              margin: 1em auto;
+              padding: 1em 2em;
+              color: #000;
+              background-color: rgba(204,204,204,.7);
+              border: .07em solid rgba(0,0,0,.5);
+              border-radius: .5em;
+            }
+            #main[aria-busy=true]::before {
+              content: "Wait...";
+              font-size: 200%;
+              padding: 15%;
+              color: #333;
+              text-shadow: 0 0 .5em #fff;
+              display: block;
+              box-sizing: border-box;
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              overflow: hidden;
+              min-height: 150px;
+              border-radius: .125em;
+              background-color: rgb(247, 231, 206);
+              background: linear-gradient(to right, rgba(229, 196, 146,.5) 0, rgba(247, 231, 206,.25) 25%, rgba(247, 231, 206,.25) 75%, rgba(229, 196, 146,.5)),
+                url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/2729/drops1.png) 100% 0 repeat,
+                url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/2729/drops2.png) 50% 50% repeat,
+                url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/2729/drops3.png) 0 0 repeat,
+                linear-gradient(to right, rgb(229, 196, 146) 0, rgb(247, 231, 206) 25%, rgb(247, 231, 206) 75%, rgb(229, 196, 146));
+              background-size: cover, 350px, 250px, 150px, cover;
+              background-attachment: fixed, fixed, fixed, fixed;
+              -webkit-animation: EFFERVESCE 3s linear infinite;
+              animation: EFFERVESCE 3s linear infinite;
+            }
+
+            @-webkit-keyframes EFFERVESCE {
+                from { background-position: 0 0, 0 0, 0 0, 0 0, 0 0; }
+                to { background-position: 0 0, 0 -700px, 0 -500px, 0 -300px, 0 0; }
+            }
+
+            @keyframes EFFERVESCE {
+                from { background-position: 0 0, 0 0, 0 0, 0 0, 0 0; }
+                to { background-position: 0 0, 0 -700px, 0 -500px, 0 -300px, 0 0; }
+            }
+            
+            /* aria-flowto */
+            .btn {
+               // display: block;
+                height: 35px;
+                width: 100px;
+                font-size: 1.1em;
+                font-weight: bold;
+                padding: 10px 15px;
+                margin 20px auto;
+                color: #ccc;
+                background-color: #555;
+                border: 0 none;
+                border-radius: 3px;
+                text-shadow: 0 -1px 0 #000;
+                box-shadow: 0 1px 0 #666, 0 2px 0 #444, 0 2px 2px rgba(0,0,0,0.6);
+            }
+
+            .btn:hover, .btn:focus
+            {
+              background-color: #820bbb;
+              color: #fff;
+              text-shadow: 0 -1px 0 #444, 0 0 5px #ffd, 0 0 8px #fff;
+              box-shadow: 0 1px 0 #666, 0 2px 0 #444, 0 2px 2px rgba(0,0,0,0.9);
+              cursor: pointer;
+            }
+
+            [aria-pressed="true"]
+            {
+                color: #fff;
+                text-shadow: 0 -1px 0 #444, 0 0 5px #ffd, 0 0 8px #fff;
+                box-shadow: 0 1px 0 #666, 0 2px 0 #444, 0 2px 2px rgba(0,0,0,0.9);
+            }
+
+            
+            .tb_style01, .tb_scr{width:100%; border:0 none; border-collapse: collapse}
+            .tb_style01 th, .tb_style01 td, .tb_scr th, .tb_scr td{border-top:1px solid #eee; padding:4px; font-size:12px; text-align: center;}
+            .tb_style01 th:first-of-type, .tb_scr th:first-of-type{border-right:1px solid #eee;}
+            .tb_style01 th:last-of-type, .tb_style01 td:last-of-type{border-bottom:1px solid #eee;}
+            .tb_style01 thead th, .tb_scr thead th{background:#c8adc8; width:10%;}
+            .tb_style01 th{text-align: center;}
+            
+            
+            .tb_scr caption{font-weight: 700; font-size:14px; text-align:left;}
+            .tb_scr th, .tb_scr td{border-top:1px solid #eee; border-right:1px solid #eee; border-bottom:1px solid #eee; padding:4px; font-size:12px; text-align: center;}
+            .tb_scr td:last-of-type{border-right:none;}
+            
+            .list_disc{list-style-type: disc; padding-left:20px;}
+        </style>
+    </head>
+    <body>        
+        <div id="wrap">
+            <h1>ARIA 속성 알아보기</h1>
+            <p style="text-align: right">ARIA 관련 구닥 : <a href="https://docs.google.com/spreadsheets/d/13WuyLIp7JZbnMlSlQAhyK4TPpaH-J5wm5mRtyTFia7I/edit#gid=0" target="_blank">ARIA 관련 구닥 바로가기</a></p>
+            <br><br>
+            <nav>
+                <ul>
+                    <li><a href="#aria-errormessage">aria-errormessage</a></li>
+                    <li><a href="#aria-flowto">aria-flowto</a></li>
+                    <li><a href="#aria-busy">aria-busy</a></li>
+                </ul>
+            </nav>
+            <section id="aria-errormessage" class="card">
+                <h2>* aria-errormessage(property)</h2>                
+                <ul class="accordion_list">
+                    <li>
+                        <button class="accordion">설명</button>
+                        <div class="panel">
+                            <div class="inner">                                
+                                - 오류 메세지를 전달하기 위한 속성<br>
+                                - 주로 폼 요소인 input 요소에 선언<br>
+                                - 오류 메세지를 제공하는 요소의 id값을 참조<br>
+                                - aria-invalid와 같이 제공<br>
+                                - 에러메세지를 동적으로 제공할 경우 aria-live 속성을 이용하여 실시간으로 오류를 제공<br>
+                                
+                                - aria-invalid 속성이 없을 경우, aria-errormessage가 참조하는 요소가 적용되지 않음<br>
+                                - aria-invalid 기본 default값은 false이나, 에러 조건 충족 시 동적으로 속성값이 true로 변함<br>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <button class="accordion">예제 &amp; 사용법</button>
+                        <div class="panel">
+                            <div class="inner">
+                                <h3>키보드 인터렉션</h3>
+                                <table class="tb_style01">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">키보드</th>
+                                            <th scope="col">인터랙션</th>
+                                        </tr>                                        
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">
+                                                탭키 / 가상커서 
+                                            </th>
+                                            <td>
+                                                다음 폼/링크 요소로 이동
+                                            </td>
+                                        </tr>                                        
+                                    </tbody>
+                                </table>                                
+                                <br>                               
+                                <form id="SampleForm" action="#" method="post">
+                                    <dl>
+                                        <dt>aria-errormessage="참조 id" / aria-invalid="true" / aria-live="assertive"</dt>
+                                        <dd>            
+                                            <div class="text code">        
+                                                <label for="fname">
+                                                    First Name
+                                                    <span>*</span>
+                                                </label>
+
+                                                <input type="text" name="fname" id="fname" size="12" onblur="checkFirst(event)" aria-required="true" aria-invalid="true" aria-errormessage="fname_error"/>
+                                                <div class="error" id="fname_error" aria-live="assertive"></div>
+<div class="xmp_wrap">
+<xmp>
+<label for="fname">First Name<span>*</span></label>
+<input type="text" name="fname" id="fname" size="12" onblur="checkFirst(event)" aria-required="true" aria-invalid="true" aria-errormessage="fname_error"/>
+<div class="error" id="fname_error" aria-live="assertive"></div>
+</xmp>    
+</div>
+                                            </div>
+                                        </dd>   
+                                        
+                                        <dt>aria-errormessage 사용 x / aria-invalid="true" / aria-live="off"</dt>
+                                        <dd>            
+                                            <div class="text code">
+                                                <label for="lname">
+                                                  Last Name
+                                                  <span>*</span>
+                                                </label>
+                                                <input type="text" name="lname" id="lname" size="20" onblur="checkLast(event)" aria-required="true" aria-invalid="true" />
+                                                <div class="error" id="lname_error" aria-live="off"></div>
+<div class="xmp_wrap">                                                
+<xmp>
+<label for="lname">Last Name<span>*</span></label>
+<input type="text" name="lname" id="lname" size="20" onblur="checkLast(event)" aria-required="true" aria-invalid="true" />
+<div class="error" id="lname_error" aria-live="off"></div>
+</xmp>    
+</div>    
+                                            </div>
+                                        </dd>
+                                        <dd>
+<div class="xmp_wrap">                                         
+<xmp>
+function validateForm() {
+              var errorMessage = "Please complete the following fields:";
+              var errorElements = new Array();
+              var node;
+              var result;
+              var node_focus = null;
+              // check required fields
+
+              // Check first name
+              var node = document.getElementById("fname");
+              if( node && node.value == "" ) {
+
+                  result = "\nYou must enter your first name";
+                  errorElements.push(result);
+                  showError(node, result);
+
+                  node_focus = node;
+               }
+
+              // Check last name
+              node = document.getElementById("lname");
+              if( node && node.value == "" ) {
+
+                  result = "\nYou must enter your last name";
+                  errorElements.push(result);
+                  showError(node, result);
+
+                  if( node_focus == null )
+                     node_focus = node;
+               }
+
+              // Check date
+              node = document.getElementById("date");
+
+              if( node ) {
+
+                    result = validateDate( node );
+
+                    if( result != "" ) {
+
+                    errorElements.push(result);
+                    showError(node, result);
+
+                   if( node_focus == null )
+                       node_focus = node;
+
+                    }  // end if
+
+              } // end if
+
+              // Check SSN
+              node = document.getElementById("ssn");
+
+              if( node ) {
+
+                    result = validateSSN( node );
+
+                    if( result != "" ) {
+
+                    errorElements.push(result);
+                    showError(node, result);
+
+                   if( node_focus == null )
+                       node_focus = node;
+
+                    }  // end if
+
+              } // end if
+
+
+              // Check Phone
+              node = document.getElementById("phone");
+
+              if( node  && node.value == "") {
+
+                     result = "\nYou must enter a phone number, \nsuch as (555) 123-4567 ";
+                    errorElements.push(result);
+                    showError(node, result);
+
+                   if( node_focus == null )
+                       node_focus = node;
+
+              }  else {
+
+                 if( node ) {
+
+                    result = validatePhone( node );
+
+                    if( result != "" ) {
+
+                    errorElements.push(result);
+                    showError(node, result);
+
+                   if( node_focus == null )
+                       node_focus = node;
+
+                    }  // end if
+
+                 } // end if
+
+              }  // end if else
+
+           if( node_focus != null ) {
+
+                for(i=0; i < errorElements.length; i++ ) {
+
+                   errorMessage += "\n" + errorElements[i];
+
+                }  // end for
+
+                alert(errorMessage);
+
+                 if( node_focus )
+                    node_focus.focus();
+
+                return false;
+           } else {
+                // supress submit for test; for a real form, return true
+                alert("If this were a real form, you would have just submitted it.");
+                return false;
+           }
+        }
+
+        function checkFirst(event) {
+             var node = getTarget(event);
+             var result;
+
+             if( node.value == "" ) {
+               var result =  "You must enter your first name";
+              } else {
+               result = "";
+              } // endif
+
+            showError(node, result);
+
+            return stopPropagation( event);
+
+        }
+
+        function checkLast(event) {
+             var node = getTarget(event);
+             var result;
+
+             if( node && node.value == "" ) {
+               result =  "You must enter your last name";
+              } else {
+               result = "";
+              } // endif
+
+            showError(node, result);
+
+            return stopPropagation( event);
+
+        }
+
+        function checkDate(event) {
+
+             var node = getTarget(event);
+
+             if( node ) {
+               var result =  validateDate( node);
+               showError(node, result);
+            } // endif
+
+            return stopPropagation( event);
+        }
+
+        function validateDate(node) {
+
+              var errorMessage = "\nDate needs to be in date format, \nsuch as 1/31/2001.";
+
+              if (node.value != "") {
+                // try parsing as date using JavaScript Date constructor
+                var dateValue = new Date(node.value.replace(/-/g, "/"));
+                if (isFinite(dateValue)) {
+                  // if two-digit year, guess at correct century
+                  if (node.value.match(/\D\d{1,2}$/) && dateValue.getFullYear() < (new Date().getFullYear() - 96)) {
+                    dateValue.setFullYear(dateValue.getFullYear() + 100);
+                  }
+                  // format as mm/dd/yyyy
+                  node.value = (dateValue.getMonth() + 1) + "/" + dateValue.getDate() + "/" + dateValue.getFullYear();
+                  return "";
+                }
+                else {
+                  return errorMessage;
+                }
+              }
+              return "";
+        }
+
+        function checkPhone(event ) {
+
+             var node = getTarget( event );
+
+             if( node ) {
+               var result =  validatePhone( node);
+               showError(node, result);    
+            } // endif
+
+            return stopPropagation( event);
+
+        }
+
+        function validatePhone( node ) {
+              var errorMessage = "\nPhone needs to be a phone number with area code, \nsuch as (555) 123-4567.";
+              if (node.value != "") {
+                // replace all non-digit characters, then match string starting with 2-9 (US phone numbers can't start with 0 or 1) followed by 2 digits, 3 digits, 4 digits
+                if (node.value.replace(/\D/g, "").match(/([2-9]\d{2})(\d{3})(\d{4})/)) {
+                  // use sub-matches captured above to format as (###) ###-####
+                  node.value = "(" + RegExp.$1 + ") " + RegExp.$2 + "-" + RegExp.$3;
+                  return "";
+                }
+                else {
+                  return errorMessage;
+                }
+              }
+              return "\nYou must enter a phone number, \nsuch as (555) 123-4567";      
+            }
+
+        function checkSSN(event) {
+
+             var node = getTarget( event );
+
+             if( node ) {
+               var result =  validateSSN( node);
+               showError(node, result);    
+            } // endif
+
+            return stopPropagation( event);
+
+        }
+
+        function validateSSN(node) {
+              var errorMessage = "\nSocial Security Number needs to be a nine-digit number, \nsuch as 123-45-6789.";
+
+              if (node.value != "") {
+                // replace all non-digit characters, then match 3 digits, 2 digits, 4 digits
+
+                if (node.value.replace(/\D/g, "").match(/(\d{3})(\d{2})(\d{4})/) ) {
+                  // use sub-matches captured above to format as ###-##-####
+                  node.value = RegExp.$1 + "-" + RegExp.$2 + "-" + RegExp.$3;
+                  return "";
+                }
+                else {
+                  return errorMessage;
+                }
+              }
+              return "";
+            }
+
+            function showError(node, message) {
+              var id = node.id + "_error";
+
+              var node_error = document.getElementById( id );
+
+              if( node_error )
+                    node_error.innerHTML = "<span class='offscreen'>In valid: </span>" + message;
+
+              if( message == "" ) {
+                 node.setAttribute('aria-invalid', 'false');
+                 node_error.style.display = "none";
+              } else {
+                 node.setAttribute('aria-invalid', 'true');
+                 node_error.style.display = "inline";
+               }
+
+            }
+
+
+           function getTarget( event ) {
+             var e = event || window.event;
+
+             if( e.target )
+                 return e.target;
+              else
+                 return e.srcElement;
+        }
+
+           function stopPropagation( event ) {
+
+              if( event.stopPropagation )
+                 event.stopPropagation();
+
+              if( event.preventDefault )
+                event.preventDefault();
+
+             if( event.cancelBubble)
+               event.cancelBubble = true;
+
+            if(event.returnValue)
+               event.returnValue = false;
+
+            return false;
+        }
+</xmp>    
+</div>  
+                                        </dd>
+                                    </dl>
+                                    <div class="button">
+                                        <input type="button" value="Check Form" onclick=" validateForm()"/>
+                                    </div>
+                                </form>
+                                <a href="https://jsbin.com/homifaw/7/edit?html,css,js" target="_blank">해당 예제 링크로 바로가기</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <button class="accordion">스크린리더</button>
+                        <div class="panel">
+                            <div class="inner">
+                                <table class="tg">
+                                  <tr>
+                                    <th class="tg-w3ps">aria 속성<br></th>
+                                    <th class="tg-w3ps">NVDA<br></th>
+                                    <th class="tg-w3ps">JAWS</th>
+                                  </tr>
+                                  <tr>
+                                    <td class="tg-0pky">aria-errormessage, aria-invaild=true, aria-live=assertive<br></td>
+                                    <td class="tg-c3ow">X<br></td>
+                                    <td class="tg-c3ow">O</td>
+                                  </tr>                                
+                                  <tr>
+                                    <td class="tg-0pky">aria-invaild=true, aria-live=assertive</td>
+                                    <td class="tg-c3ow">X</td>
+                                    <td class="tg-c3ow">X</td>
+                                  </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <h3>결론</h3>
+                <ul class="list_disc">
+                    <li>JAWS/IE에서는 aria-errormessage 속성 사용 여부에따라 에러메세지 제공/미제공 차이 있음(해당 속성 사용해야 에러메세지 읽어줌)</li>                   
+                    <li>NVDA/FF에서는 aria-errormessage 속성 사용 여부에따라 에러메세지 제공/미제공 차이 없음(에러메세지 읽어줌)</li>                   
+                </ul>    
+                <br>
+                <h3>참고 사이트</h3>
+                <ul>
+                    <li><a href="https://www.w3.org/TR/wai-aria-1.1/#aria-errormessage" target="_blank">w3 : aria-errormessage 바로가기</a></li>                    
+                </ul>
+            </section>
+            <section id="aria-flowto" class="card">
+                <h2>* aria-flowto(property)</h2>                
+                <ul class="accordion_list">
+                    <li>
+                        <button class="accordion">설명</button>
+                        <div class="panel">
+                            <div class="inner">
+                                - DOM 구조와 다르게 탐색 하고자 할 경우<br>
+                                - 해당 요소에 참조 ID를 설정(다중 참조할 요소의 ID값을 읽어줄 순서대로 입력)
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <button class="accordion">예제 &amp; 사용법</button>
+                        <div class="panel">
+                            <div class="inner">
+                                <h3>키보드 인터렉션</h3>
+                                <table class="tb_style01">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">키보드</th>
+                                            <th scope="col">인터랙션</th>
+                                        </tr>                                        
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">
+                                               "="(Equals Navigation Quick key) 
+                                            </th>
+                                            <td>
+                                                "flows to" 요소로 이동
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                               "shift" + "="(shift + Equals Navigation Quick key)
+                                            </th>
+                                            <td>
+                                                "flows" 요소로 이동
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>                                
+                                <br>
+                                <dl>
+                                    <dt>aria-flowto=단일 id값</dt>
+                                    <dd>                                        
+                                        <div>
+                                            <div class="code">
+                                                
+                                                <p aria-flowto="topnews-1">
+                                                    <a href="http://www.nytimes.com/" target="_blank">[ The New York Times Logo Here ]</a>                                  
+                                                </p>                                                                                  
+                                                [a bunch of things that shouldn't be next]
+                                                <article class="story theme-feature" id="topnews-1">
+                                                    [The main article content]
+                                                </article>
+<div class="xmp_wrap">                                                
+<xmp>
+<p aria-flowto="topnews-1">
+    <a href="http://www.nytimes.com/" target="_blank">[ The New York Times Logo Here ]</a>
+</p>                                                                                  
+[a bunch of things that shouldn't be next]
+<article class="story theme-feature" id="topnews-1">
+    [The main article content]
+</article>
+</xmp>                                               
+</div>                                                
+                                                <br>
+                                              <table class="tb_scr">
+                                                    <caption>[순차적으로 이동하여 aria-flowto 요소에서 키보드 인터랙션 시]</caption>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>&nbsp;</th>
+                                                            <th>스크린리더(NVDA/FF) 음성</th>
+                                                            <th>스크린리더(JAWS/IE) 음성</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>탭키/가상 커서</th>
+                                                            <td rowspan="5">-</td>                                                            
+                                                            <td>~ has flowto</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>"="</th>                                                           
+                                                            <td>article</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>"shift" + "="</th>    
+                                                            <td>no more flows found</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>"=" + "가상 커서 이동(아래 키)"</th>    
+                                                            <td>article > aria-flowto에서 지정한 영역 내용 읽어줌 > article end</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>"shift" + "=" + "가상 커서 이동(아래 키)"</th>    
+                                                            <td>해당 요소 다음에 위치하고 있는 요소를 읽어줌</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                 <br>
+                                                <table class="tb_scr">
+                                                    <caption>[aria-flowto 요소가 참조하고 있는 id에서 키보드 인터랙션 시]</caption>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>&nbsp;</th>
+                                                            <th>스크린리더(NVDA/FF) 음성</th>
+                                                            <th>스크린리더(JAWS/IE) 음성</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>"shift" + "="</th>    
+                                                            <td>-</td>
+                                                            <td>자신을 참조하고있는 aria-flowto 요소로 이동하여<br> 컨텐츠 읽어줌</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>                                                                               
+                                    </dd>
+                                    <dt>aria-flowto=다중 id값</dt>
+                                    <dd>                                        
+                                        <div>
+                                            <div class="code">                                                
+                                                <p class="branding" aria-flowto="topnews-3 topnews-4">
+                                                    <a href="http://www.nytimes.com/">[ The New York Times Logo Here ]</a>
+                                                </p>
+                                                [a bunch of things that shouldn't be next]
+                                                <article class="story theme-summary lede" id="topnews-4">
+                                                    [content]
+                                                </article>
+                                                <article class="story theme-feature" id="topnews-3">
+                                                    [The main article content]
+                                                </article>
+<div class="xmp_wrap">                                                
+<xmp>
+<p class="branding" aria-flowto="topnews-1 topnews-2">
+<a href="http://www.nytimes.com/">[ The New York Times Logo Here ]</a>
+</p>
+[a bunch of things that shouldn't be next]
+<article class="story theme-summary lede" id="topnews-2">
+[content]
+</article>
+<article class="story theme-feature" id="topnews-1">
+[The main article content]
+</article>
+</xmp>                                               
+</div>                                                
+                                                <br>
+                                              <table class="tb_scr">
+                                                    <caption>[순차적으로 이동하여 aria-flowto 요소에서 키보드 인터랙션 시]</caption>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>&nbsp;</th>
+                                                            <th>스크린리더(NVDA/FF) 음성</th>
+                                                            <th>스크린리더(JAWS/IE) 음성</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>탭키/가상 커서</th>
+                                                            <td rowspan="5">-</td>                                                            
+                                                            <td>~ has flowto</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>"="</th>                                                           
+                                                            <td>FlowTo Relationship창 노출<br>(다음으로 이동할 영역 선택 - 다음 영역에 대한 텍스트는 비노출되어 나옴)</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>"shift" + "="</th>    
+                                                            <td>no more flows found</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>"=" + "FlowTo Relationship창 - 다음 영역 선택" + "가상 커서 이동(아래 키)"</th>    
+                                                            <td>article 2번 읽음> 지정한 영역 내용 읽어줌</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>"shift" + "=" + "가상 커서 이동(아래 키)"</th>    
+                                                            <td>해당 요소 다음에 위치하고 있는 요소를 읽어줌</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <br>
+                                                <table class="tb_scr">
+                                                    <caption>[aria-flowto 요소가 참조하고 있는 id에서 키보드 인터랙션 시]</caption>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>&nbsp;</th>
+                                                            <th>스크린리더(NVDA/FF) 음성</th>
+                                                            <th>스크린리더(JAWS/IE) 음성</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>"shift" + "="</th>    
+                                                            <td>-</td>
+                                                            <td>자신을 참조하고있는 aria-flowto 요소로 이동하여<br> 컨텐츠 읽어줌</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>                                                                               
+                                    </dd>
+                                    <dt>aria-flowto > daisy-chain 방식</dt>
+                                    <dd>                                        
+                                        <div>
+                                            <div class="code">                                                
+                                                <p class="branding" aria-flowto="topnews-5">
+                                                    <a href="http://www.nytimes.com/">[ The New York Times Logo Here ]</a>
+                                                </p>
+                                                [a bunch of things that shouldn't be next]
+                                                <article class="story theme-summary lede" id="topnews-6">
+                                                    [content]
+                                                </article>
+                                                <article class="story theme-feature" id="topnews-5" aria-flowto="topnews-6">
+                                                    [The main article content]
+                                                </article>
+<div class="xmp_wrap">                                            
+<xmp>
+<p class="branding" aria-flowto="topnews-1">
+<a href="http://www.nytimes.com/">[ The New York Times Logo Here ]</a>
+</p>
+[a bunch of things that shouldn't be next]
+<article class="story theme-summary lede" id="topnews-2">
+[content]
+</article>
+<article class="story theme-feature" id="topnews-1" aria-flowto="topnews-2">
+[The main article content]
+</article>
+</xmp>                                               
+</div>                                                
+                                                <br>
+                                              <table class="tb_scr">
+                                                    <caption>[순차적으로 이동하여 aria-flowto 요소에서 키보드 인터랙션 시]</caption>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>&nbsp;</th>
+                                                            <th>스크린리더(NVDA/FF) 음성</th>
+                                                            <th>스크린리더(JAWS/IE) 음성</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>탭키/가상 커서</th>
+                                                            <td rowspan="5">-</td>                                                            
+                                                            <td>~ has flowto</td>
+                                                        </tr>                                                        
+                                                        <tr>
+                                                            <th>"="</th>    
+                                                            <td>article</td>
+                                                        </tr>                                                      
+                                                        <tr>
+                                                            <th>"shift" + "="</th>    
+                                                            <td>no more flows found</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>"=" + "가상 커서 이동(아래 키)"</th>    
+                                                            <td>article > aria-flowto에서 지정한 영역 내용 읽어줌 > has flowfrom has flowto > article end</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>"shift" + "=" + "가상 커서 이동(아래 키)"</th>    
+                                                            <td>해당 요소 다음에 위치하고 있는 요소를 읽어줌</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <br>
+                                                <table class="tb_scr">
+                                                    <caption>[aria-flowto 요소가 참조하고 있는 id에서 키보드 인터랙션 시]</caption>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>&nbsp;</th>
+                                                            <th>스크린리더(NVDA/FF) 음성</th>
+                                                            <th>스크린리더(JAWS/IE) 음성</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>"shift" + "="</th>    
+                                                            <td>-</td>
+                                                            <td>자신을 참조하고있는 aria-flowto 요소로 이동하여<br> 컨텐츠 읽어줌</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>                                                                               
+                                    </dd>
+                                    <dt>FlexBox / button</dt>
+                                    <dd>                                        
+                                        <div>
+                                            <div class="code">                                                
+                                                <div style="display: flex; margin-bottom:8px;">
+                                                    <button id="b1" class="btn" aria-flowto="b3" style="order: 3;">1</button>
+                                                    <button id="b2" class="btn" aria-flowto="b1" style="order: 2;">2</button>
+                                                    <button id="b3" class="btn" aria-flowto="b2 b4" style="order: 1;">3</button>
+                                                </div>
+<div class="xmp_wrap">                                            
+<xmp>
+<div style="display: flex;">
+    <button id="b1" class="btn" aria-flowto="b3" style="order: 3;">1</button>
+    <button id="b2" class="btn" aria-flowto="b1" style="order: 2;">2</button>
+    <button id="b3" class="btn" aria-flowto="b2" style="order: 1;">3</button>
+</div>
+</xmp>                                               
+</div>                                               
+                                                
+
+                                                <table class="tb_scr">
+                                                    <caption>[순차적으로 "버튼" 이동하여 키보드 인터랙션 시]</caption>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>&nbsp;</th>
+                                                            <th>스크린리더(NVDA/FF) 음성</th>
+                                                            <th>스크린리더(JAWS/IE) 음성</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>=</th>
+                                                            <td rowspan="2">-</td>
+                                                            <td>aria-flowto에서 참조하고있는 id값의 컨텐츠를 읽어줌</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>"shift" + "="</th>
+                                                            <td>해당 요소를 참조하고있는 aria-flowto 속성을 갖고있는 요소를 읽어줌</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>탭키/가상 커서</th>
+                                                            <td>-</td>
+                                                            <td>~has flowfrom has flowto</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table> 
+                                                 <br>
+                                                <table class="tb_scr">
+                                                    <caption>[aria-flowto 요소가 참조하고 있는 id에서 키보드 인터랙션 시]</caption>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>&nbsp;</th>
+                                                            <th>스크린리더(NVDA/FF) 음성</th>
+                                                            <th>스크린리더(JAWS/IE) 음성</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>"shift" + "="</th>    
+                                                            <td>-</td>
+                                                            <td>자신을 참조하고있는 aria-flowto 요소로 이동하여<br> 컨텐츠 읽어줌</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </div>                                                                               
+                                    </dd>
+                                </dl>
+                                
+                                
+                                <a href="https://timwright.org/blog/2016/11/05/changing-reading-order-page-aria-flowto/" target="_blank">블록 태그에서 해당 속성 사용 예제 바로가기</a><br>
+                                <a href="http://playground.tink.uk/flexbox3/index.html" target="_blank">flex/button 관련 예제 바로가기</a>                                
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <button class="accordion">스크린리더</button>
+                        <div class="panel">
+                            <div class="inner">
+                                <table class="tg">
+                                  <tr>
+                                    <th class="tg-w3ps">aria 속성<br></th>
+                                    <th class="tg-w3ps">NVDA<br></th>
+                                    <th class="tg-w3ps">JAWS</th>
+                                  </tr>
+                                  <tr>
+                                    <td class="tg-0lax">aria-flowto - div, p 속성 적용</td>
+                                    <td class="tg-c3ow">X<br></td>
+                                    <td class="tg-baqh" rowspan="2">has flows from<br>또는<br>has flows to</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="tg-0lax">aria-flowto - button 속성 적용<br></td>
+                                    <td class="tg-c3ow">X<br></td>
+                                  </tr>
+                                </table>                                
+                            </div>
+                        </div>
+                    </li>
+                </ul>                
+                <h3>결론</h3>
+                <ul class="list_disc">
+                    <li>aria-flowto 속성을 가진 요소에서 "="키를 누르고 가상 커서(아래 키) 조작 시 작성자가 지정한 다음 영역으로 이동하여 컨텐츠를 읽어주며, 다시 가상 커서 조작 시 DOM 구조대로 읽어줌</li>
+                    <li>aria-flowto 속성을 가진 요소에서는 has flowto라고 읽으며, aria-flowto 속성이 참조한 id값의 요소에서는 has flowfrom이라고 읽어줌</li>
+                    <li>aria-flowto = 다중 id값을 참조하는 요소에서 "="키 조작 시 FlowTo Relationship 창 노출되어 다음으로 위치할 영역 지정 가능</li>
+                    <li>aria-flowto가 참조하고 있는 요소에서 "shift" + "=" 조작 시 해당 요소를 참조하고 있는 aria-flowto 속성의 요소로 이동하여 해당 요소의 컨텐츠 읽어줌</li>
+                </ul>    
+                <br>
+                <h3>참고 사이트</h3>
+                <ul>
+                    <li><a href="https://www.w3.org/TR/2017/REC-wai-aria-1.1-20171214/#aria-flowto" target="_blank">w3 : aria-flowto 바로가기</a></li>
+                </ul>
+            </section>
+            <section id="aria-busy" class="card">
+                <h2>* aria-busy(state)</h2>                
+                <ul class="accordion_list">
+                    <li>
+                        <button class="accordion">설명</button>
+                        <div class="panel">
+                            <div class="inner">
+                            - Live Region의 상태 값으로 aria-busy 속성을 지정하면 업데이트가 진행 중인지 여부를 표현할 수 있음<br>
+                            - aria-busy="true" 요소가 업데이트 중<br>
+                            - aria-busy="false" 요소의 예상 업데이트가 없음<br>
+                            - aria-live와 함께 사용하게 되면 라이브 영역 설정에 따라 사용자에게 전달할 내용을 조정 가능<br><br>
+                                
+                            aria-live 속성 종류 : <br>
+                            1.	aria-live=off (일시적으로 중단하는 경우 적합)<br>
+                            2.	aria-live=polite (중요하지만 긴급하지는 않은 변경 사항일 경우에 적합)<br>
+                            3.	aria-live=assertive (수행 중인 작업이 무엇이든 중단하고 사용자에게 변경 사항을 즉시 알리는 경우에 적합)
+
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <button class="accordion">예제 &amp; 사용법</button>
+                        <div class="panel">
+                            <div class="inner">
+                                <h3>키보드 인터렉션</h3>
+                                <table class="tb_style01">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">키보드</th>
+                                            <th scope="col">인터랙션</th>
+                                        </tr>                                        
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">
+                                                -
+                                            </th>
+                                            <td>
+                                                마지막 위치
+                                            </td>
+                                        </tr>                                        
+                                    </tbody>
+                                </table>                                
+                                <br>
+                                <dl>
+                                    <dt>aria-busy=true/flase</dt>
+                                    <dd>                                        
+                                        <div>
+                                            <div class="code">
+                                                  <h1>Testing <a href="https://www.w3.org/TR/wai-aria-1.1/#aria-busy"> <code>aria-busy</code></a> with screen readers</h1>
+        <p>
+            <button id="start">Save my changes</button>
+        </p>
+        <div aria-busy="false" id="busy1" aria-live="assertive">
+            <span id="content"></span>
+            Activating the button above will put a state of
+            <code>aria-busy="true"</code>
+            on this
+            <code>p</code>
+            element for 10 seconds. When
+            <code>aria-busy="true"</code>, the content is not available to JAWS users.
+        </div>
+        <p>Tested: works with JAWS, does not work with NVDA, or VoiceOver on iOS</p>
+        <div aria-live="assertive" id="aria"></div>
+<div class="xmp_wrap">                                                
+<xmp>
+    <h1>Testing <a href="https://www.w3.org/TR/wai-aria-1.1/#aria-busy"><code>aria-busy</code></a> with screen readers</h1>
+        <p>
+            <button id="start">Save my changes</button>
+        </p>
+        <div aria-busy="false" id="busy1" aria-live="assertive">
+            <span id="content"></span>
+            Activating the button above will put a state of
+            <code>aria-busy="true"</code>
+            on this
+            <code>p</code>
+            element for 10 seconds. When
+            <code>aria-busy="true"</code>, the content is not available to JAWS users.
+        </div>
+        <p>Tested: works with JAWS, does not work with NVDA, or VoiceOver on iOS</p>
+        <div aria-live="assertive" id="aria"></div>                                       
+</xmp>                                    
+</div>
+                                                
+<div class="xmp_wrap">                                                
+<xmp>
+  var start = document.getElementById("start");
+            var div = document.createElement('div');
+            var aria1 = document.createElement('p');
+            var aria2 = document.createElement('p');
+            div.innerHTML = '<p> Its aria-busy testing time<\/p>';
+            aria1.innerHTML = ' Hello ARIA one TESTing';
+            aria2.innerHTML = ' Two Hi ARIA 2 TESTing Times ';
+            start.addEventListener("click", function () {
+                document.getElementById("busy1").setAttribute("aria-busy", "true");
+                start.innerHTML = "Loading...";
+                start.disabled = true;
+                document.getElementById('content').appendChild(div);
+                document.getElementById('busy1').appendChild(aria1);
+                setTimeout(function () {
+                    document.getElementById('busy1').appendChild(aria2);
+                }, 2000);
+                setTimeout(function () {
+                    document.getElementById('busy1').appendChild(div);
+                }, 4000);
+                // revert these changes after 10 seconds
+                setTimeout(function () {
+                    document.getElementById("busy1").setAttribute("aria-busy", "false");
+                    start.innerHTML = "Save my changes";
+                    start.disabled = false;
+                    document.getElementById('busy1').removeChild(aria1);
+                    document.getElementById('busy1').removeChild(aria2);
+                    document.getElementById('busy1').removeChild(div);
+                    document.getElementById('content').removeChild(div);
+                    document.getElementById('busy1').appendChild(aria2);
+                }, 10000);
+                setTimeout(function () {
+                    document.getElementById('busy1').appendChild(div);
+                }, 11000);
+            });                           
+</xmp>                                    
+</div>  
+                                          </div>
+                                        </div>                                                                               
+                                    </dd>
+                                </dl>
+                                
+                                
+                                
+                                <a href="https://codepen.io/stevef/pen/OZwMqv/" target="_blank">버튼을 통한 aria-busy 속성 컨트롤 예제</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <button class="accordion">스크린리더</button>
+                        <div class="panel">
+                            <div class="inner">
+                                <table class="tg">
+                                  <tr>
+                                    <th class="tg-w3ps">aria 속성<br></th>
+                                    <th class="tg-w3ps">NVDA<br></th>
+                                    <th class="tg-w3ps">JAWS</th>
+                                  </tr>
+                                  <tr>
+                                    <td class="tg-0pky">aria-busy(state)</td>
+                                    <td class="tg-c3ow" colspan="2">X</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="tg-0pky">aria-busy(state), aria-live=assertive</td>
+                                      <td colspan="2">O</td> 
+                                  </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <h3>결론</h3>
+                <ul class="list_disc">
+                    <li>aria-busy 속성이 true일 경우, 해당 영역의 컨텐츠가 실시간으로 바뀐다던지 업데이트가 되면 해당 영역(업데이트 내용)은 읽지 않아야하며, 최종적으로 false값으로 변경되고 완료된 컨텐츠를 읽어줘야 함</li>
+                    <li>
+                        현재 aria-live와 함께 제공 시 NVDA/JAWS에서 읽어줌
+                    </li>
+                </ul>    
+                <h3>참고 사이트</h3>
+                <ul>
+                    <li><a href="https://www.w3.org/TR/wai-aria-1.1/#aria-busy" target="_blank">w3 : aria-busy 바로가기</a></li>
+                </ul>
+            </section>
+        </div> 
+        <!-- //#wrap e -->
+        
+        <script>
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+          acc[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+              panel.style.maxHeight = null;
+            } else {
+              panel.style.maxHeight = panel.scrollHeight + "px";
+            }
+          });
+        }
+            
+        /* aria-errormessage */
+        function validateForm() {
+              var errorMessage = "Please complete the following fields:";
+              var errorElements = new Array();
+              var node;
+              var result;
+              var node_focus = null;
+              // check required fields
+
+              // Check first name
+              var node = document.getElementById("fname");
+              if( node && node.value == "" ) {
+
+                  result = "\nYou must enter your first name";
+                  errorElements.push(result);
+                  showError(node, result);
+
+                  node_focus = node;
+               }
+
+              // Check last name
+              node = document.getElementById("lname");
+              if( node && node.value == "" ) {
+
+                  result = "\nYou must enter your last name";
+                  errorElements.push(result);
+                  showError(node, result);
+
+                  if( node_focus == null )
+                     node_focus = node;
+               }
+
+              // Check date
+              node = document.getElementById("date");
+
+              if( node ) {
+
+                    result = validateDate( node );
+
+                    if( result != "" ) {
+
+                    errorElements.push(result);
+                    showError(node, result);
+
+                   if( node_focus == null )
+                       node_focus = node;
+
+                    }  // end if
+
+              } // end if
+
+              // Check SSN
+              node = document.getElementById("ssn");
+
+              if( node ) {
+
+                    result = validateSSN( node );
+
+                    if( result != "" ) {
+
+                    errorElements.push(result);
+                    showError(node, result);
+
+                   if( node_focus == null )
+                       node_focus = node;
+
+                    }  // end if
+
+              } // end if
+
+
+              // Check Phone
+              node = document.getElementById("phone");
+
+              if( node  && node.value == "") {
+
+                     result = "\nYou must enter a phone number, \nsuch as (555) 123-4567 ";
+                    errorElements.push(result);
+                    showError(node, result);
+
+                   if( node_focus == null )
+                       node_focus = node;
+
+              }  else {
+
+                 if( node ) {
+
+                    result = validatePhone( node );
+
+                    if( result != "" ) {
+
+                    errorElements.push(result);
+                    showError(node, result);
+
+                   if( node_focus == null )
+                       node_focus = node;
+
+                    }  // end if
+
+                 } // end if
+
+              }  // end if else
+
+           if( node_focus != null ) {
+
+                for(i=0; i < errorElements.length; i++ ) {
+
+                   errorMessage += "\n" + errorElements[i];
+
+                }  // end for
+
+                alert(errorMessage);
+
+                 if( node_focus )
+                    node_focus.focus();
+
+                return false;
+           } else {
+                // supress submit for test; for a real form, return true
+                alert("If this were a real form, you would have just submitted it.");
+                return false;
+           }
+        }
+
+        function checkFirst(event) {
+             var node = getTarget(event);
+             var result;
+
+             if( node.value == "" ) {
+               var result =  "You must enter your first name";
+              } else {
+               result = "";
+              } // endif
+
+            showError(node, result);
+
+            return stopPropagation( event);
+
+        }
+
+        function checkLast(event) {
+             var node = getTarget(event);
+             var result;
+
+             if( node && node.value == "" ) {
+               result =  "You must enter your last name";
+              } else {
+               result = "";
+              } // endif
+
+            showError(node, result);
+
+            return stopPropagation( event);
+
+        }
+
+        function checkDate(event) {
+
+             var node = getTarget(event);
+
+             if( node ) {
+               var result =  validateDate( node);
+               showError(node, result);
+            } // endif
+
+            return stopPropagation( event);
+        }
+
+        function validateDate(node) {
+
+              var errorMessage = "\nDate needs to be in date format, \nsuch as 1/31/2001.";
+
+              if (node.value != "") {
+                // try parsing as date using JavaScript Date constructor
+                var dateValue = new Date(node.value.replace(/-/g, "/"));
+                if (isFinite(dateValue)) {
+                  // if two-digit year, guess at correct century
+                  if (node.value.match(/\D\d{1,2}$/) && dateValue.getFullYear() < (new Date().getFullYear() - 96)) {
+                    dateValue.setFullYear(dateValue.getFullYear() + 100);
+                  }
+                  // format as mm/dd/yyyy
+                  node.value = (dateValue.getMonth() + 1) + "/" + dateValue.getDate() + "/" + dateValue.getFullYear();
+                  return "";
+                }
+                else {
+                  return errorMessage;
+                }
+              }
+              return "";
+        }
+
+        function checkPhone(event ) {
+
+             var node = getTarget( event );
+
+             if( node ) {
+               var result =  validatePhone( node);
+               showError(node, result);    
+            } // endif
+
+            return stopPropagation( event);
+
+        }
+
+        function validatePhone( node ) {
+              var errorMessage = "\nPhone needs to be a phone number with area code, \nsuch as (555) 123-4567.";
+              if (node.value != "") {
+                // replace all non-digit characters, then match string starting with 2-9 (US phone numbers can't start with 0 or 1) followed by 2 digits, 3 digits, 4 digits
+                if (node.value.replace(/\D/g, "").match(/([2-9]\d{2})(\d{3})(\d{4})/)) {
+                  // use sub-matches captured above to format as (###) ###-####
+                  node.value = "(" + RegExp.$1 + ") " + RegExp.$2 + "-" + RegExp.$3;
+                  return "";
+                }
+                else {
+                  return errorMessage;
+                }
+              }
+              return "\nYou must enter a phone number, \nsuch as (555) 123-4567";      
+            }
+
+        function checkSSN(event) {
+
+             var node = getTarget( event );
+
+             if( node ) {
+               var result =  validateSSN( node);
+               showError(node, result);    
+            } // endif
+
+            return stopPropagation( event);
+
+        }
+
+        function validateSSN(node) {
+              var errorMessage = "\nSocial Security Number needs to be a nine-digit number, \nsuch as 123-45-6789.";
+
+              if (node.value != "") {
+                // replace all non-digit characters, then match 3 digits, 2 digits, 4 digits
+
+                if (node.value.replace(/\D/g, "").match(/(\d{3})(\d{2})(\d{4})/) ) {
+                  // use sub-matches captured above to format as ###-##-####
+                  node.value = RegExp.$1 + "-" + RegExp.$2 + "-" + RegExp.$3;
+                  return "";
+                }
+                else {
+                  return errorMessage;
+                }
+              }
+              return "";
+            }
+
+            function showError(node, message) {
+              var id = node.id + "_error";
+
+              var node_error = document.getElementById( id );
+
+              if( node_error )
+                    node_error.innerHTML = "<span class='offscreen'>In valid: </span>" + message;
+
+              if( message == "" ) {
+                 node.setAttribute('aria-invalid', 'false');
+                 node_error.style.display = "none";
+              } else {
+                 node.setAttribute('aria-invalid', 'true');
+                 node_error.style.display = "inline";
+               }
+
+            }
+
+
+           function getTarget( event ) {
+             var e = event || window.event;
+
+             if( e.target )
+                 return e.target;
+              else
+                 return e.srcElement;
+        }
+
+           function stopPropagation( event ) {
+
+              if( event.stopPropagation )
+                 event.stopPropagation();
+
+              if( event.preventDefault )
+                event.preventDefault();
+
+             if( event.cancelBubble)
+               event.cancelBubble = true;
+
+            if(event.returnValue)
+               event.returnValue = false;
+
+            return false;
+        }
+        
+            
+        /* aria-busy */
+        var start = document.getElementById("start");
+            var div = document.createElement('div');
+            var aria1 = document.createElement('p');
+            var aria2 = document.createElement('p');
+            div.innerHTML = '<p> Its aria-busy testing time<\/p>';
+            aria1.innerHTML = ' Hello ARIA one TESTing';
+            aria2.innerHTML = ' Two Hi ARIA 2 TESTing Times ';
+            start.addEventListener("click", function () {
+                document.getElementById("busy1").setAttribute("aria-busy", "true");
+                start.innerHTML = "Loading...";
+                start.disabled = true;
+                document.getElementById('content').appendChild(div);
+                document.getElementById('busy1').appendChild(aria1);
+                setTimeout(function () {
+                    document.getElementById('busy1').appendChild(aria2);
+                }, 2000);
+                setTimeout(function () {
+                    document.getElementById('busy1').appendChild(div);
+                }, 4000);
+                // revert these changes after 10 seconds
+                setTimeout(function () {
+                    document.getElementById("busy1").setAttribute("aria-busy", "false");
+                    start.innerHTML = "Save my changes";
+                    start.disabled = false;
+                    document.getElementById('busy1').removeChild(aria1);
+                    document.getElementById('busy1').removeChild(aria2);
+                    document.getElementById('busy1').removeChild(div);
+                    document.getElementById('content').removeChild(div);
+                    document.getElementById('busy1').appendChild(aria2);
+                }, 10000);
+                setTimeout(function () {
+                    document.getElementById('busy1').appendChild(div);
+                }, 11000);
+            });
+        </script>                
+    </body>
+</html>
